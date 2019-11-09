@@ -118,7 +118,6 @@ extern const texture_t **textures; // proff - 04/05/2000 removed static for Open
 extern fixed_t   *textureheight; //needed for texture pegging (and TFE fix - killough)
 
 extern short       *flattranslation;             // for global animation
-extern short       *texturetranslation;
 
 extern fixed_t basexscale, baseyscale;
 

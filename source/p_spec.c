@@ -2249,14 +2249,7 @@ void P_UpdateSpecials (void)
     {
         if(anim->istexture)
         {
-            if(textures[anim->basepic] != NULL)
-            {
-                for (i=anim->basepic ; i<anim->basepic+anim->numpics ; i++)
-                {
-                    pic = anim->basepic + ( (_g->leveltime/anim->speed + i)%anim->numpics );
-                    texturetranslation[i] = pic;
-                }
-            }
+            continue;
         }
         else
         {

@@ -140,7 +140,6 @@ const texture_t **textures; // proff - 04/05/2000 removed static for OpenGL
 fixed_t   *textureheight; //needed for texture pegging (and TFE fix - killough)
 
 short       *flattranslation;             // for global animation
-short       *texturetranslation;
 
 fixed_t basexscale, baseyscale;
 static fixed_t xoffs,yoffs;    // killough 2/28/98: flat offsets
@@ -564,7 +563,6 @@ static void R_RenderMaskedSegRange(drawseg_t *ds, int x1, int x2)
     backsector = SG_BACKSECTOR(curline);
 
     texnum = _g->sides[curline->sidenum].midtexture;
-    texnum = texturetranslation[texnum];
 
     // killough 4/13/98: get correct lightlevel for 2s normal textures
     rw_lightlevel = frontsector->lightlevel;
@@ -1934,7 +1932,7 @@ static void R_StoreWallRange(const int start, const int stop)
     if (!backsector)
     {
         // single sided line
-        midtexture = texturetranslation[sidedef->midtexture];
+        midtexture = sidedef->midtexture;
 
         // a single sided line is terminal, so it must mark ends
         markfloor = markceiling = true;
@@ -2027,7 +2025,7 @@ static void R_StoreWallRange(const int start, const int stop)
 
         if (worldhigh < worldtop)   // top texture
         {
-            toptexture = texturetranslation[sidedef->toptexture];
+            toptexture = sidedef->toptexture;
             rw_toptexturemid = linedef->flags & ML_DONTPEGTOP ? worldtop :
                                                                         backsector->ceilingheight+textureheight[sidedef->toptexture]-viewz;
             rw_toptexturemid += FixedMod(sidedef->rowoffset, textureheight[toptexture]);
@@ -2035,7 +2033,7 @@ static void R_StoreWallRange(const int start, const int stop)
 
         if (worldlow > worldbottom) // bottom texture
         {
-            bottomtexture = texturetranslation[sidedef->bottomtexture];
+            bottomtexture = sidedef->bottomtexture;
             rw_bottomtexturemid = linedef->flags & ML_DONTPEGBOTTOM ? worldtop : worldlow;
             rw_bottomtexturemid += FixedMod(sidedef->rowoffset, textureheight[bottomtexture]);
         }
@@ -2238,18 +2236,18 @@ static void R_RecalcLineFlags(void)
 
         /* Does top texture need tiling */
         if ((c = frontsector->ceilingheight - backsector->ceilingheight) > 0 &&
-                (textureheight[texturetranslation[_g->sides[curline->sidenum].toptexture]] > c))
+                (textureheight[_g->sides[curline->sidenum].toptexture] > c))
             linedata->r_flags |= RF_TOP_TILE;
 
         /* Does bottom texture need tiling */
         if ((c = frontsector->floorheight - backsector->floorheight) > 0 &&
-                (textureheight[texturetranslation[_g->sides[curline->sidenum].bottomtexture]] > c))
+                (textureheight[_g->sides[curline->sidenum].bottomtexture] > c))
             linedata->r_flags |= RF_BOT_TILE;
     } else {
         int c;
         /* Does middle texture need tiling */
         if ((c = frontsector->ceilingheight - frontsector->floorheight) > 0 &&
-                (textureheight[texturetranslation[_g->sides[curline->sidenum].midtexture]] > c))
+                (textureheight[_g->sides[curline->sidenum].midtexture] > c))
             linedata->r_flags |= RF_MID_TILE;
     }
 }
